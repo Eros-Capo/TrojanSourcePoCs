@@ -12,10 +12,12 @@ public class App {
     public static void sayНello() {
         System.out.println("Goodbye, World!");
     }
+
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        /** PoC_2 01: The function called here will output "Goodbye world" because of the use of homoglyph character **/
         sayНello();
 
+        /** PoC_2 02: We set the accessLevel as user but with the use of LRI, PDI, RLO the user get evaluated as an "admin" **/
         String accessLevel = "user";
         if (accessLevel != "user‮ ⁦// Check if admin⁩ ⁦") {
             System.out.println("You are an admin.");
