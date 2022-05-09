@@ -13,6 +13,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Properties;
+import java.util.Scanner;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -25,23 +26,25 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class JavaPropertiesPoC {
     public static void main(String[] args) throws Exception {
-
+        /** Configuring the application to retrive the properties **/
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         Properties xmlProps = new Properties();
-        
         String xmlConfigPath = rootPath + "app_properties.xml";
         xmlProps.loadFromXML(new FileInputStream(xmlConfigPath));
-        //PoC01
+        /** PoC_1 01: The server host will be the one set by the attackers with homoglyph character **/
         String serverHost = xmlProps.getProperty("Server.Нost");
-        //PoC02
-        //String serverHost= xmlProps.getProperty("Server.Host‮⁦//hostname⁩⁦"));         
 
-        //PoC03 
+        /** PoC_1 02: The encryption key will be the one set by the attackers with homoglyph character **/
         String key = xmlProps.getProperty("encryption.kｅy");
-        System.out.println("key: " + key);
-        String cipherTextBase64 = encrypt("some plainText message to be encrypted", key);
+
+        /** Testing Phase **/
+        String message;
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Write a statement to send it via encryption!");
+        message = scan.nextLine();
+        String cipherTextBase64 = encrypt(message, key);
         System.out.println("cipherText: " + cipherTextBase64);
-        
+        System.out.println("key: " + key);
         System.out.println("ServerHost: "+ serverHost);
 
         String[] data= {"userID=250", "sessionID=123456","cipherText="+cipherTextBase64};
@@ -49,7 +52,7 @@ public class JavaPropertiesPoC {
         SendDataToServer(serverHost,data);
     }
 
-//encrypt
+    /** Encryption function **/
     public static String encrypt(String plainText, String key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException {
         
         SecureRandom random = new SecureRandom();
@@ -72,47 +75,47 @@ public class JavaPropertiesPoC {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-/***
- * Send telemetry data to the server
- * @param serverHost
- * @throws IOException
- */
-private static void SendDataToServer(String serverHost , String[] data) throws IOException {
- 
-    URL url = new URL("http://"+serverHost+"/api/telemetry");
- 
-    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-    connection.setRequestMethod("POST");
-    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-    connection.setDoOutput(true);
- 
-    DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+    /**
+     * Send telemetry data to the server
+     * @param serverHost
+     * @throws IOException
+     */
+    private static void SendDataToServer(String serverHost , String[] data) throws IOException {
 
-    //TODO: inviare Json
-    String urlPostParameters= String.join("&", data);
+        URL url = new URL("http://"+serverHost+"/api/telemetry");
 
-    outputStream.writeBytes(urlPostParameters);
-    outputStream.flush();
-    outputStream.close();
- 
-    System.out.println("Send 'HTTP POST' request to : " + url);
- 
-    int responseCode = connection.getResponseCode();
-    System.out.println("Response Code : " + responseCode);
- 
-    if (responseCode == HttpURLConnection.HTTP_OK) {
-        BufferedReader inputReader = new BufferedReader(
-            new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
- 
-        while ((inputLine = inputReader.readLine()) != null) {
-            response.append(inputLine);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+        connection.setDoOutput(true);
+
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+
+        //TODO: inviare Json
+        String urlPostParameters= String.join("&", data);
+
+        outputStream.writeBytes(urlPostParameters);
+        outputStream.flush();
+        outputStream.close();
+
+        System.out.println("Send 'HTTP POST' request to : " + url);
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Response Code : " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader inputReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = inputReader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            inputReader.close();
+
+            System.out.println(response.toString());
         }
-        inputReader.close();
- 
-        System.out.println(response.toString());
-    }
 
-}
+    }
 }
