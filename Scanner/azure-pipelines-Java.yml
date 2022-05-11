@@ -1,0 +1,54 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'Sonar'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'TrojanSourcePoC1Mitigated_TrojanSourcePoC1Mitigated'
+    cliSources: '.'
+
+- task: gattjoe.SLSAProvenanceGenerator.custom-build-release-task.SLSAProvenanceGenerator@0
+  displayName: 'SLSA Provenance Generator'
+  inputs:
+    artifactPath: $(Pipeline.Workspace)/
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: 'TrojanSourceScan.py'
+    arguments: '-r ./**/* -o $(Pipeline.Workspace)/TrjSrcResult.log'
+    failOnStderr: true
+  continueOnError: true
+
+- script: javac JavaPropertiesPoC.java
+  displayName: 'Java Compile'
+
+- task: SonarQubeAnalyze@5
+
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/TrjSrcResult.log'
+    artifact: 'TrjSrcResult.log'
+    publishLocation: 'pipeline'

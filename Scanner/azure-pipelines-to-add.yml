@@ -1,0 +1,44 @@
+# https://github.com/emanbuc/trojan-source
+
+# Minimal pipeline to run Trojan Source scanner, that can be customized to build and deploy code
+# For using the Provenance Generator task and implementing SLSA Level 1, the following Azure DevOps extension is needed:
+# https://marketplace.visualstudio.com/items?itemName=gattjoe.SLSAProvenanceGenerator
+# Credits for Provenance Task: https://github.com/slsa-framework/azure-devops-demo/blob/main/azure-pipelines.yml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps: # to add
+
+- task: gattjoe.SLSAProvenanceGenerator.custom-build-release-task.SLSAProvenanceGenerator@0
+  displayName: 'SLSA Provenance Generator'
+  inputs:
+    artifactPath: $(Pipeline.Workspace)/
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: 'TrojanSourceScan.py'
+    arguments: '-r ./**/* -o $(Pipeline.Workspace)/TrjSrcResult.log'
+    failOnStderr: true
+  continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/TrjSrcResult.log'
+    artifact: 'TrjSrcResult.log'
+    publishLocation: 'pipeline'
