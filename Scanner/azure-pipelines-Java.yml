@@ -13,7 +13,7 @@ steps:
 
 - task: SonarQubePrepare@5
   inputs:
-    SonarQube: 'Sonar'
+    SonarQube: 'Sonar' # change with the Service Connection configured in your project
     scannerMode: 'CLI'
     configMode: 'manual'
     cliProjectKey: 'TrojanSourcePoC1Mitigated_TrojanSourcePoC1Mitigated'
