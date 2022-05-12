@@ -1,0 +1,1 @@
+Upload TrojanSourceScan.py and TSUnicode.py in the Azure DevOps project main directory, and add the contents of the azure-pipelines-to-add.yml YAML file to the pipelines to implement the control

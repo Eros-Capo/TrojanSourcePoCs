@@ -1,0 +1,81 @@
+# https://github.com/emanbuc/trojan-source
+
+# Example pipeline to run Trojan Source scanner, which also builds a ASP.NET project, analyzing it with SonarQube and implementing SLSA Level 1
+# SonarQube must be previously configured
+# For using the Provenance Generator task, the following Azure DevOps extension is needed:
+# https://marketplace.visualstudio.com/items?itemName=gattjoe.SLSAProvenanceGenerator
+# Credits for Provenance Task: https://github.com/slsa-framework/azure-devops-demo/blob/main/azure-pipelines.yml
+
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'SonarQube Service'
+    scannerMode: 'MSBuild'
+    projectKey: 'Prova_Prova'
+    projectName: 'Prova'
+
+- task: gattjoe.SLSAProvenanceGenerator.custom-build-release-task.SLSAProvenanceGenerator@0
+  displayName: 'SLSA Provenance Generator'
+  inputs:
+    artifactPath: $(Pipeline.Workspace)/
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: 'TrojanSourceScan.py'
+    arguments: '-r ./**/* -o $(Pipeline.Workspace)/TrjSrcResult.log'
+    failOnStderr: true
+  continueOnError: true
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: SonarQubeAnalyze@5
+
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/TrjSrcResult.log'
+    artifact: 'TrjSrcResult.log'
+    publishLocation: 'pipeline'
