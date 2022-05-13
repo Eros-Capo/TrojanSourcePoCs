@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4d121f12-e913-4801-bdb4-451fd79eca5c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PoC_2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PoC_2.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/App.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/PoC_2.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PoC_2/app.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +23,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -42,13 +33,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -68,6 +61,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652349779762</updated>
       <workItem from="1652349781888" duration="31000" />
+      <workItem from="1652445780732" duration="667000" />
     </task>
     <servers />
   </component>

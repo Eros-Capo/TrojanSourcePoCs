@@ -11,10 +11,10 @@
     <entry key="Server.Нost">malware.evil.com</entry>
    
     <!-- Enter here YOUR super secret encryption key -->
-    <entry key="encryption.key">12345678</entry>
+    <entry key="encryption.key">@McQfTjWnZr4u7x!z%C*F-JaNdRgUkXp</entry>
     <entry key="p4">p4 value</entry>
     <entry key="p5">p5 value</entry>
     <!-- .. Other configuration parameters .. -->
     <!-- Misleading configuration attack PoC_1 02: the client will encrypt using the following key instead of the intended one -->
-    <entry key="encryption.kｅy">Hacked</entry>
+    <entry key="encryption.kｅy">/A?D(G+KbPeShVmYq3t6w9z$B$E)H@Mc</entry>
 </properties>
