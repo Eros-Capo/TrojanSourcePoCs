@@ -16,8 +16,9 @@ steps:
     SonarQube: 'Sonar' # change with the Service Connection configured in your project
     scannerMode: 'CLI'
     configMode: 'manual'
-    cliProjectKey: 'TrojanSourcePoC1Mitigated_TrojanSourcePoC1Mitigated'
+    cliProjectKey: 'NewLinePoC_Mitigated_NewLinePoC_Mitigated' # change with your Project Key
     cliSources: '.'
+  continueOnError: true
 
 - task: gattjoe.SLSAProvenanceGenerator.custom-build-release-task.SLSAProvenanceGenerator@0
   displayName: 'SLSA Provenance Generator'
@@ -38,14 +39,16 @@ steps:
     failOnStderr: true
   continueOnError: true
 
-- script: javac JavaPropertiesPoC.java
+- script: javac JavaAuthenticationPoC.java
   displayName: 'Java Compile'
 
 - task: SonarQubeAnalyze@5
+  continueOnError: true
 
 - task: SonarQubePublish@5
   inputs:
     pollingTimeoutSec: '300'
+  continueOnError: true
 
 - task: PublishPipelineArtifact@1
   inputs:
