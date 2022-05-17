@@ -1,0 +1,4 @@
+version: 2
+Server:
+  - Нost: malware.evil.com
+  - Host: update.acme.com
